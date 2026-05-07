@@ -1,0 +1,1201 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>东升焊机产品详情 - 杭州授权经销商</title>
+  <style>
+    :root {
+      --red: #d71920;
+      --red-dark: #a70f15;
+      --black: #111111;
+      --ink: #222222;
+      --muted: #666666;
+      --line: #e7e7e7;
+      --bg: #f4f4f4;
+      --white: #ffffff;
+      --gold: #f5b43a;
+      --green: #1c8b4a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, "Microsoft YaHei", "PingFang SC", sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.65;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(17, 17, 17, .96);
+      border-bottom: 3px solid var(--red);
+      color: var(--white);
+    }
+
+    .nav {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      background: var(--red);
+      color: var(--white);
+      border-radius: 4px;
+      font-weight: 900;
+    }
+
+    .brand-name {
+      font-size: 19px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .brand-sub {
+      color: #d4d4d4;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .nav-links a {
+      padding: 8px 9px;
+      color: #eeeeee;
+    }
+
+    .hero {
+      color: var(--white);
+      background:
+        linear-gradient(90deg, rgba(0,0,0,.92), rgba(0,0,0,.62) 56%, rgba(215,25,32,.25)),
+        url("assets/images/hero-detail.svg") center/cover;
+    }
+
+    .hero-inner {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      min-height: 410px;
+      padding: 58px 0 44px;
+      display: grid;
+      grid-template-columns: 1.02fr .98fr;
+      align-items: center;
+      gap: 34px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      padding: 6px 10px;
+      background: var(--red);
+      border-radius: 3px;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    h1 {
+      margin: 18px 0 14px;
+      font-size: clamp(32px, 5vw, 56px);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      max-width: 650px;
+      margin: 0 0 24px;
+      color: #eeeeee;
+      font-size: 17px;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 26px;
+    }
+
+    .hero-tags span {
+      padding: 7px 10px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    .hero-panel {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 8px;
+      padding: 18px;
+      backdrop-filter: blur(8px);
+    }
+
+    .deal-row {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255,255,255,.16);
+      padding-bottom: 14px;
+      margin-bottom: 14px;
+    }
+
+    .price {
+      color: #ff454d;
+      font-size: 34px;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .stock {
+      color: #f1f1f1;
+      font-size: 13px;
+    }
+
+    .quick-specs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .quick-spec {
+      padding: 12px 8px;
+      border-radius: 5px;
+      background: rgba(0,0,0,.28);
+      text-align: center;
+      font-size: 12px;
+      color: #cccccc;
+    }
+
+    .quick-spec strong {
+      display: block;
+      color: var(--white);
+      font-size: 16px;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      padding: 0 18px;
+      border: 0;
+      border-radius: 4px;
+      background: var(--red);
+      color: var(--white);
+      font-size: 16px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
+      box-shadow: 0 10px 24px rgba(215,25,32,.28);
+    }
+
+    .btn:hover {
+      background: var(--red-dark);
+      transform: translateY(-2px);
+    }
+
+    .btn:active,
+    .btn.clicked {
+      transform: scale(.97);
+      box-shadow: 0 4px 12px rgba(215,25,32,.22);
+    }
+
+    .btn.secondary {
+      background: var(--black);
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: none;
+    }
+
+    .section {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 54px 0;
+    }
+
+    .section h2 {
+      margin: 0 0 10px;
+      font-size: clamp(24px, 3.2vw, 34px);
+      line-height: 1.2;
+    }
+
+    .section-note {
+      margin: 0 0 24px;
+      color: var(--muted);
+    }
+
+    .gallery-layout {
+      display: grid;
+      grid-template-columns: 1.06fr .94fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .gallery {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .main-image {
+      position: relative;
+      overflow: hidden;
+      border-radius: 6px;
+      aspect-ratio: 4 / 3;
+      background: #202020;
+    }
+
+    .main-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .carousel-control {
+      position: absolute;
+      top: 50%;
+      width: 38px;
+      height: 38px;
+      border: 0;
+      border-radius: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,.6);
+      color: var(--white);
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    .carousel-control.prev {
+      left: 12px;
+    }
+
+    .carousel-control.next {
+      right: 12px;
+    }
+
+    .thumbs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .thumb {
+      padding: 0;
+      border: 2px solid transparent;
+      border-radius: 5px;
+      overflow: hidden;
+      cursor: pointer;
+      background: #222222;
+      aspect-ratio: 4 / 3;
+    }
+
+    .thumb.active {
+      border-color: var(--red);
+    }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .detail-summary {
+      display: grid;
+      gap: 14px;
+    }
+
+    .summary-block {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .summary-block h3 {
+      margin: 0 0 10px;
+      font-size: 21px;
+    }
+
+    .summary-list {
+      margin: 0;
+      padding-left: 18px;
+      color: #3d3d3d;
+    }
+
+    .selling-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .selling-card,
+    .scene-card,
+    .review-card,
+    .after-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .selling-card img,
+    .scene-card img {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      background: #252525;
+    }
+
+    .selling-card div,
+    .scene-card div,
+    .review-card,
+    .after-card {
+      padding: 18px;
+    }
+
+    .selling-card h3,
+    .scene-card h3,
+    .after-card h3 {
+      margin: 0 0 8px;
+      font-size: 19px;
+      line-height: 1.25;
+    }
+
+    .selling-card p,
+    .scene-card p,
+    .after-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 680px;
+    }
+
+    th,
+    td {
+      padding: 15px 16px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      font-size: 15px;
+    }
+
+    th {
+      width: 28%;
+      background: #171717;
+      color: var(--white);
+    }
+
+    tr:last-child th,
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .scene-grid,
+    .review-grid,
+    .after-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .parts-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .parts-image {
+      overflow: hidden;
+      border-radius: 8px;
+      background: #202020;
+    }
+
+    .parts-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      min-height: 320px;
+    }
+
+    .parts-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .part-item {
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .part-icon {
+      width: 54px;
+      height: 54px;
+      display: grid;
+      place-items: center;
+      border-radius: 6px;
+      background: var(--black);
+      color: var(--red);
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .part-item h3 {
+      margin: 0 0 2px;
+      font-size: 17px;
+    }
+
+    .part-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .stars {
+      color: var(--gold);
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .review-card p {
+      margin: 0 0 12px;
+      color: #444444;
+      font-size: 14px;
+    }
+
+    .review-card strong {
+      color: var(--black);
+    }
+
+    .after-card {
+      border-top: 4px solid var(--red);
+    }
+
+    .sticky-buy {
+      position: sticky;
+      bottom: 0;
+      z-index: 40;
+      background: rgba(17,17,17,.96);
+      border-top: 1px solid rgba(255,255,255,.12);
+      color: var(--white);
+    }
+
+    .sticky-inner {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .sticky-title {
+      min-width: 0;
+    }
+
+    .sticky-title strong {
+      display: block;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sticky-title span {
+      color: #cfcfcf;
+      font-size: 13px;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 86px;
+      z-index: 80;
+      transform: translateX(-50%) translateY(16px);
+      opacity: 0;
+      pointer-events: none;
+      padding: 10px 16px;
+      border-radius: 4px;
+      background: rgba(17,17,17,.94);
+      color: var(--white);
+      transition: opacity .2s ease, transform .2s ease;
+      font-size: 14px;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 900px) {
+      .hero-inner,
+      .gallery-layout,
+      .parts-wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .selling-grid,
+      .scene-grid,
+      .review-grid,
+      .after-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .nav {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 12px 0;
+        gap: 8px;
+      }
+
+      .nav-links {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 2px;
+      }
+
+      .hero-inner {
+        padding: 46px 0 34px;
+        min-height: auto;
+      }
+
+      .quick-specs,
+      .selling-grid,
+      .scene-grid,
+      .review-grid,
+      .after-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .thumbs {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .sticky-inner {
+        min-height: 78px;
+      }
+
+      .sticky-title span {
+        display: none;
+      }
+
+      .sticky-buy .btn {
+        min-width: 128px;
+        padding: 0 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav" aria-label="主导航">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">东</span>
+        <span>
+          <span class="brand-name">东升焊机</span><br>
+          <span class="brand-sub">杭州地区授权经销商</span>
+        </span>
+      </a>
+      <div class="nav-links">
+        <a href="#gallery">主图</a>
+        <a href="#selling">卖点</a>
+        <a href="#params">参数</a>
+        <a href="#service">售后</a>
+        <a href="index.html">返回列表</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-inner">
+        <div>
+          <span class="eyebrow">东升焊机 · 杭州授权经销商</span>
+          <h1 id="productName">东升 ARC-250 电焊机</h1>
+          <p class="hero-copy" id="productIntro">稳定电流，体积紧凑，适合维修、安装、轻型加工和家庭 DIY。</p>
+          <div class="hero-tags" id="heroTags">
+            <span>稳定电流</span>
+            <span>新手友好</span>
+            <span>杭州服务</span>
+          </div>
+          <div class="btn-row">
+            <a class="btn js-click js-buy" href="#buy">立即咨询下单</a>
+            <a class="btn secondary js-click" href="#params">查看参数</a>
+          </div>
+        </div>
+
+        <aside class="hero-panel" aria-label="购买信息">
+          <div class="deal-row">
+            <div>
+              <div class="stock">线上咨询价</div>
+              <div class="price" id="productPrice">￥咨询价</div>
+            </div>
+            <div class="stock">杭州现货 / 支持发货</div>
+          </div>
+          <div class="quick-specs" id="quickSpecs">
+            <span class="quick-spec"><strong>220V</strong>输入电压</span>
+            <span class="quick-spec"><strong>250A</strong>额定电流</span>
+            <span class="quick-spec"><strong>2.5-4.0</strong>适配焊条</span>
+          </div>
+          <div class="btn-row">
+            <button class="btn js-click js-buy" type="button">加入采购清单</button>
+            <a class="btn secondary js-click" href="index.html">更多型号</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="gallery">
+      <h2>产品主图展示</h2>
+      <p class="section-note">支持多图切换，后续可替换为真实设备图、细节图、包装图和焊接效果图。</p>
+      <div class="gallery-layout">
+        <div class="gallery">
+          <div class="main-image">
+            <img id="mainImage" src="assets/images/arc250-main.svg" alt="产品主图">
+            <button class="carousel-control prev" type="button" aria-label="上一张">‹</button>
+            <button class="carousel-control next" type="button" aria-label="下一张">›</button>
+          </div>
+          <div class="thumbs" id="thumbs"></div>
+        </div>
+
+        <div class="detail-summary">
+          <div class="summary-block">
+            <h3>适合人群</h3>
+            <ul class="summary-list" id="fitList">
+              <li>五金维修、安装施工、门店常备</li>
+              <li>需要便携设备的新手或师傅</li>
+              <li>家庭 DIY 与轻型钢材焊接</li>
+            </ul>
+          </div>
+          <div class="summary-block">
+            <h3>购买建议</h3>
+            <ul class="summary-list">
+              <li>下单前确认电源条件、焊材厚度和使用频率。</li>
+              <li>需要连续作业可优先选择更高电流型号。</li>
+              <li>配件可按焊枪、电缆、防护用品组合购买。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="selling">
+      <h2>核心卖点</h2>
+      <p class="section-note">围绕线上用户最关心的稳定性、耐用性、上手难度与服务保障设计。</p>
+      <div class="selling-grid">
+        <article class="selling-card">
+          <img src="assets/images/selling-stable.svg" alt="稳定电流">
+          <div>
+            <h3>电流稳定，焊接更顺</h3>
+            <p>输出平稳，减少断弧和粘条情况，适合日常维修与连续作业。</p>
+          </div>
+        </article>
+        <article class="selling-card">
+          <img src="assets/images/selling-cooling.svg" alt="工业级散热">
+          <div>
+            <h3>耐用机身，散热可靠</h3>
+            <p>工业风结构设计，兼顾机身强度与散热效率，应对高频使用。</p>
+          </div>
+        </article>
+        <article class="selling-card">
+          <img src="assets/images/selling-beginner.svg" alt="新手友好">
+          <div>
+            <h3>操作直观，新手友好</h3>
+            <p>常用参数易调节，适合门店师傅、安装人员和家庭用户快速上手。</p>
+          </div>
+        </article>
+        <article class="selling-card">
+          <img src="assets/images/selling-portable.svg" alt="小型便携">
+          <div>
+            <h3>小型便携，移动方便</h3>
+            <p>便于随车携带、上门维修、工地转场和临时安装作业。</p>
+          </div>
+        </article>
+        <article class="selling-card">
+          <img src="assets/images/selling-parts.svg" alt="配件齐全">
+          <div>
+            <h3>配件齐全，按需搭配</h3>
+            <p>焊枪、电缆、地线夹、防护面罩等常用配件可一起采购。</p>
+          </div>
+        </article>
+        <article class="selling-card">
+          <img src="assets/images/selling-service.svg" alt="杭州服务">
+          <div>
+            <h3>杭州经销，服务响应快</h3>
+            <p>本地授权经销商提供售前选型、售后沟通与使用建议。</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="params">
+      <h2>产品参数表</h2>
+      <p class="section-note">以下为电商展示参考参数，实际型号参数可按厂家资料替换。</p>
+      <div class="table-wrap">
+        <table>
+          <tbody id="paramsBody">
+            <tr><th>产品型号</th><td>东升 ARC-250</td></tr>
+            <tr><th>产品类型</th><td>逆变直流电焊机</td></tr>
+            <tr><th>输入电压</th><td>220V</td></tr>
+            <tr><th>额定电流</th><td>250A</td></tr>
+            <tr><th>适用焊材</th><td>2.5-4.0mm 焊条</td></tr>
+            <tr><th>适用范围</th><td>维修、安装、轻型加工、家庭 DIY</td></tr>
+            <tr><th>建议搭配</th><td>焊钳线、地线夹、防护面罩、焊条</td></tr>
+            <tr><th>售后保障</th><td>整机质保，杭州经销服务支持</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="scenes">
+      <h2>使用场景展示</h2>
+      <p class="section-note">覆盖工地、维修、加工、家庭 DIY 等常见采购场景。</p>
+      <div class="scene-grid">
+        <article class="scene-card">
+          <img src="assets/images/scene-construction.svg" alt="工地施工">
+          <div>
+            <h3>工地施工</h3>
+            <p>钢架安装、临时维修、现场补焊，要求设备稳定耐用。</p>
+          </div>
+        </article>
+        <article class="scene-card">
+          <img src="assets/images/scene-repair.svg" alt="门店维修">
+          <div>
+            <h3>门店维修</h3>
+            <p>五金店、机修店、维修门店常备，适合日常高频使用。</p>
+          </div>
+        </article>
+        <article class="scene-card">
+          <img src="assets/images/scene-diy.svg" alt="家庭 DIY">
+          <div>
+            <h3>家庭 DIY</h3>
+            <p>护栏、架子、农具、简单金属件修补，使用门槛更友好。</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="parts">
+      <h2>配件说明</h2>
+      <p class="section-note">常用配件支持随机器一起采购，减少二次下单和型号不匹配。</p>
+      <div class="parts-wrap">
+        <div class="parts-image">
+          <img src="assets/images/parts-main.svg" alt="焊机配件展示">
+        </div>
+        <div class="parts-list">
+          <div class="part-item">
+            <span class="part-icon">枪</span>
+            <div>
+              <h3>焊枪 / 焊钳</h3>
+              <p>适配不同焊接方式，支持按设备型号搭配。</p>
+            </div>
+          </div>
+          <div class="part-item">
+            <span class="part-icon">缆</span>
+            <div>
+              <h3>焊接电缆</h3>
+              <p>焊把线、地线按长度和电流需求选择。</p>
+            </div>
+          </div>
+          <div class="part-item">
+            <span class="part-icon">护</span>
+            <div>
+              <h3>防护用品</h3>
+              <p>面罩、手套、防护镜等，提升作业安全性。</p>
+            </div>
+          </div>
+          <div class="part-item">
+            <span class="part-icon">材</span>
+            <div>
+              <h3>焊丝 / 焊条</h3>
+              <p>根据母材、厚度、焊接方式推荐常用规格。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="reviews">
+      <h2>客户评价与口碑</h2>
+      <p class="section-note">以下为电商页面模拟评价，可替换为真实买家反馈。</p>
+      <div class="review-grid">
+        <article class="review-card">
+          <div class="stars">★★★★★</div>
+          <p>“机器到货很快，试焊了一下午，电流比较稳，维修店日常用够了。”</p>
+          <strong>杭州萧山 · 维修店用户</strong>
+        </article>
+        <article class="review-card">
+          <div class="stars">★★★★★</div>
+          <p>“客服帮忙确认了电源和焊条规格，配件一起发来，省了不少事。”</p>
+          <strong>嘉兴 · 五金采购用户</strong>
+        </article>
+        <article class="review-card">
+          <div class="stars">★★★★☆</div>
+          <p>“工地临时补焊用着顺手，机身不占地方，搬来搬去也方便。”</p>
+          <strong>杭州余杭 · 工程施工用户</strong>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="service">
+      <h2>售后与保障</h2>
+      <p class="section-note">降低线上购买顾虑，突出授权经销与本地服务优势。</p>
+      <div class="after-grid">
+        <article class="after-card">
+          <h3>整机质保</h3>
+          <p>按产品政策提供质保服务，购买前可咨询具体保修范围。</p>
+        </article>
+        <article class="after-card">
+          <h3>杭州经销服务</h3>
+          <p>本地授权经销商，支持售前选型、使用建议与售后沟通。</p>
+        </article>
+        <article class="after-card">
+          <h3>快速发货</h3>
+          <p>常用型号与配件现货供应，江浙沪及周边地区物流便捷。</p>
+        </article>
+        <article class="after-card">
+          <h3>配件补购</h3>
+          <p>后续焊枪、电缆、焊材、防护用品可继续咨询补购。</p>
+        </article>
+        <article class="after-card">
+          <h3>开箱检查</h3>
+          <p>收到货后建议先检查外观、配件清单与通电状态。</p>
+        </article>
+        <article class="after-card">
+          <h3>选型提醒</h3>
+          <p>购买前请确认电源、电流、材料厚度与焊接方式，避免买错型号。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="buy">
+      <h2>立即咨询下单</h2>
+      <p class="section-note">适合放置淘宝、抖音、小红书店铺链接、客服二维码或联系电话。</p>
+      <div class="summary-block">
+        <h3>咨询时建议提供</h3>
+        <ul class="summary-list">
+          <li>焊接材料：碳钢、不锈钢、镀锌板或其他材料。</li>
+          <li>材料厚度：薄板、中厚板或重型钢材。</li>
+          <li>使用频率：偶尔维修、门店日常、工地连续作业。</li>
+          <li>现场电源：220V、380V 或两者都可用。</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <div class="sticky-buy" aria-label="底部购买栏">
+    <div class="sticky-inner">
+      <div class="sticky-title">
+        <strong id="stickyName">东升 ARC-250 电焊机</strong>
+        <span>杭州授权经销商 · 线上咨询下单</span>
+      </div>
+      <button class="btn js-click js-buy" type="button">立即购买</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">已加入采购意向，客服可在此处承接咨询</div>
+
+  <script>
+    const products = {
+      arc250: {
+        name: "东升 ARC-250 电焊机",
+        intro: "稳定电流，体积紧凑，适合维修、安装、轻型加工和家庭 DIY。",
+        price: "￥咨询价",
+        tags: ["稳定电流", "新手友好", "小型便携", "杭州服务"],
+        quick: [["220V", "输入电压"], ["250A", "额定电流"], ["2.5-4.0", "适配焊条"]],
+        images: [
+          "assets/images/arc250-main.svg",
+          "assets/images/arc250-front.svg",
+          "assets/images/arc250-detail.svg",
+          "assets/images/arc250-work.svg"
+        ],
+        fit: ["五金维修、安装施工、门店常备", "需要便携设备的新手或师傅", "家庭 DIY 与轻型钢材焊接"],
+        params: [
+          ["产品型号", "东升 ARC-250"],
+          ["产品类型", "逆变直流电焊机"],
+          ["输入电压", "220V"],
+          ["额定电流", "250A"],
+          ["适用焊材", "2.5-4.0mm 焊条"],
+          ["适用范围", "维修、安装、轻型加工、家庭 DIY"],
+          ["建议搭配", "焊钳线、地线夹、防护面罩、焊条"],
+          ["售后保障", "整机质保，杭州经销服务支持"]
+        ]
+      },
+      mig270: {
+        name: "东升 MIG-270 气保焊机",
+        intro: "送丝平顺，连续焊接效率高，适合门窗加工、钢结构薄板和维修门店。",
+        price: "￥咨询价",
+        tags: ["气保焊", "高效焊接", "送丝平顺", "配件可配"],
+        quick: [["220V/380V", "输入电压"], ["270A", "额定电流"], ["0.8-1.2", "适配焊丝"]],
+        images: [
+          "assets/images/mig270-main.svg",
+          "assets/images/mig270-front.svg",
+          "assets/images/mig270-detail.svg",
+          "assets/images/mig270-work.svg"
+        ],
+        fit: ["门窗加工、薄板焊接、钢结构维修", "希望提升连续焊接效率的用户", "需要搭配焊枪和焊丝的加工场景"],
+        params: [
+          ["产品型号", "东升 MIG-270"],
+          ["产品类型", "气体保护焊机"],
+          ["输入电压", "220V/380V 可选，以下单型号为准"],
+          ["额定电流", "270A"],
+          ["适用焊材", "0.8-1.2mm 焊丝"],
+          ["适用范围", "门窗加工、薄板焊接、维修门店、小型加工厂"],
+          ["建议搭配", "气保焊枪、送丝轮、焊丝、减压阀、防护面罩"],
+          ["售后保障", "整机质保，杭州经销服务支持"]
+        ]
+      },
+      tig315: {
+        name: "东升 TIG-315 氩弧焊机",
+        intro: "起弧顺畅，焊缝成型漂亮，适合不锈钢、管道和精密件焊接。",
+        price: "￥咨询价",
+        tags: ["氩弧焊", "精细焊接", "起弧顺畅", "TIG/MMA"],
+        quick: [["380V", "输入电压"], ["315A", "额定电流"], ["TIG/MMA", "双模式"]],
+        images: [
+          "assets/images/tig315-main.svg",
+          "assets/images/tig315-front.svg",
+          "assets/images/tig315-detail.svg",
+          "assets/images/tig315-work.svg"
+        ],
+        fit: ["不锈钢加工、管道焊接、精密件修补", "重视焊缝外观和起弧体验的用户", "需要氩弧焊和手工焊两用的场景"],
+        params: [
+          ["产品型号", "东升 TIG-315"],
+          ["产品类型", "氩弧焊机"],
+          ["输入电压", "380V"],
+          ["额定电流", "315A"],
+          ["焊接模式", "TIG / MMA"],
+          ["适用范围", "不锈钢、管道、精密件、装饰工程"],
+          ["建议搭配", "氩弧焊枪、钨针、氩气表、焊丝、防护用品"],
+          ["售后保障", "整机质保，杭州经销服务支持"]
+        ]
+      },
+      arc400: {
+        name: "东升 ARC-400 工程款",
+        intro: "输出有力，适合工地施工、钢架安装和中厚板焊接。",
+        price: "￥咨询价",
+        tags: ["工程款", "380V", "强劲输出", "耐用可靠"],
+        quick: [["380V", "输入电压"], ["400A", "额定电流"], ["3.2-5.0", "适配焊条"]],
+        images: [
+          "assets/images/arc400-main.svg",
+          "assets/images/arc400-front.svg",
+          "assets/images/arc400-detail.svg",
+          "assets/images/arc400-work.svg"
+        ],
+        fit: ["工地施工、钢架安装、中厚板焊接", "需要 380V 工程设备的用户", "使用频率较高的安装队和加工厂"],
+        params: [
+          ["产品型号", "东升 ARC-400"],
+          ["产品类型", "工程款逆变直流电焊机"],
+          ["输入电压", "380V"],
+          ["额定电流", "400A"],
+          ["适用焊材", "3.2-5.0mm 焊条"],
+          ["适用范围", "工地施工、钢结构、中厚板焊接、设备维修"],
+          ["建议搭配", "大平方焊接电缆、地线夹、防护面罩、焊条"],
+          ["售后保障", "整机质保，杭州经销服务支持"]
+        ]
+      },
+      parts: {
+        name: "焊机常用配件套装",
+        intro: "焊枪、电缆、地线夹、防护用品、焊丝焊条等常用配件，支持按需搭配。",
+        price: "￥按套咨询",
+        tags: ["配件齐全", "按需搭配", "现货供应", "适配咨询"],
+        quick: [["多规格", "配件可选"], ["现货", "常用品"], ["按需", "组合采购"]],
+        images: [
+          "assets/images/parts-main.svg",
+          "assets/images/parts-front.svg",
+          "assets/images/parts-detail.svg",
+          "assets/images/parts-work.svg"
+        ],
+        fit: ["需要一次配齐焊接工具的用户", "焊机老用户补购常耗配件", "门店、工地、家庭维修备用"],
+        params: [
+          ["产品名称", "焊机常用配件套装"],
+          ["产品类型", "焊枪、电缆、防护用品、焊材"],
+          ["适配设备", "电焊机、气保焊机、氩弧焊机"],
+          ["可选规格", "按设备型号、电流和使用场景搭配"],
+          ["适用范围", "维修、加工、工地施工、家庭 DIY"],
+          ["建议搭配", "焊枪/焊钳、电缆、地线夹、面罩、手套、焊丝焊条"],
+          ["购买提醒", "下单前建议提供焊机型号和使用需求"],
+          ["售后保障", "杭州经销服务支持"]
+        ]
+      },
+      mig350: {
+        name: "东升 MIG-350 工业款",
+        intro: "面向加工厂和连续焊接场景，适合中厚板作业，效率稳定。",
+        price: "￥咨询价",
+        tags: ["工业款", "连续作业", "中厚板", "气保焊"],
+        quick: [["380V", "输入电压"], ["350A", "额定电流"], ["1.0-1.2", "适配焊丝"]],
+        images: [
+          "assets/images/mig350-main.svg",
+          "assets/images/mig350-front.svg",
+          "assets/images/mig350-detail.svg",
+          "assets/images/mig350-work.svg"
+        ],
+        fit: ["加工厂、钢结构门店、中厚板作业", "追求效率和连续焊接稳定性的用户", "380V 工业用电场景"],
+        params: [
+          ["产品型号", "东升 MIG-350"],
+          ["产品类型", "工业款气体保护焊机"],
+          ["输入电压", "380V"],
+          ["额定电流", "350A"],
+          ["适用焊材", "1.0-1.2mm 焊丝"],
+          ["适用范围", "加工厂、中厚板焊接、钢结构、连续作业"],
+          ["建议搭配", "气保焊枪、焊丝、减压阀、防护面罩、送丝配件"],
+          ["售后保障", "整机质保，杭州经销服务支持"]
+        ]
+      }
+    };
+
+    const query = new URLSearchParams(window.location.search);
+    const modelKey = query.get("model") || "arc250";
+    const product = products[modelKey] || products.arc250;
+    let currentImage = 0;
+
+    const productName = document.getElementById("productName");
+    const productIntro = document.getElementById("productIntro");
+    const productPrice = document.getElementById("productPrice");
+    const stickyName = document.getElementById("stickyName");
+    const heroTags = document.getElementById("heroTags");
+    const quickSpecs = document.getElementById("quickSpecs");
+    const fitList = document.getElementById("fitList");
+    const paramsBody = document.getElementById("paramsBody");
+    const mainImage = document.getElementById("mainImage");
+    const thumbs = document.getElementById("thumbs");
+    const toast = document.getElementById("toast");
+
+    function renderProduct() {
+      document.title = `${product.name} - 东升焊机杭州授权经销商`;
+      productName.textContent = product.name;
+      stickyName.textContent = product.name;
+      productIntro.textContent = product.intro;
+      productPrice.textContent = product.price;
+
+      heroTags.innerHTML = product.tags.map((tag) => `<span>${tag}</span>`).join("");
+      quickSpecs.innerHTML = product.quick
+        .map(([value, label]) => `<span class="quick-spec"><strong>${value}</strong>${label}</span>`)
+        .join("");
+      fitList.innerHTML = product.fit.map((item) => `<li>${item}</li>`).join("");
+      paramsBody.innerHTML = product.params
+        .map(([key, value]) => `<tr><th>${key}</th><td>${value}</td></tr>`)
+        .join("");
+
+      renderGallery();
+    }
+
+    function renderGallery() {
+      mainImage.src = product.images[currentImage];
+      mainImage.alt = `${product.name} 图片 ${currentImage + 1}`;
+      thumbs.innerHTML = product.images
+        .map((src, index) => `
+          <button class="thumb ${index === currentImage ? "active" : ""}" type="button" data-index="${index}" aria-label="查看第 ${index + 1} 张图">
+            <img src="${src}" alt="${product.name} 缩略图 ${index + 1}">
+          </button>
+        `)
+        .join("");
+
+      thumbs.querySelectorAll(".thumb").forEach((thumb) => {
+        thumb.addEventListener("click", () => {
+          currentImage = Number(thumb.dataset.index);
+          renderGallery();
+        });
+      });
+    }
+
+    document.querySelector(".carousel-control.prev").addEventListener("click", () => {
+      currentImage = (currentImage - 1 + product.images.length) % product.images.length;
+      renderGallery();
+    });
+
+    document.querySelector(".carousel-control.next").addEventListener("click", () => {
+      currentImage = (currentImage + 1) % product.images.length;
+      renderGallery();
+    });
+
+    // 按钮点击反馈
+    document.querySelectorAll(".js-click").forEach((button) => {
+      button.addEventListener("click", () => {
+        button.classList.add("clicked");
+        setTimeout(() => button.classList.remove("clicked"), 180);
+      });
+    });
+
+    // 购买按钮反馈，可替换为跳转淘宝/抖音/客服链接
+    document.querySelectorAll(".js-buy").forEach((button) => {
+      button.addEventListener("click", () => {
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 1800);
+      });
+    });
+
+    renderProduct();
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>夯榜 HangRank</title>
+  <meta name="description" content="夯榜 HangRank - 可搜索、可逐级下钻的消费排行榜目录。">
+  <style>
+    :root {
+      --ink: #111827;
+      --muted: #667085;
+      --line: #e6e8ec;
+      --panel: rgba(255,255,255,.78);
+      --shadow: 0 18px 55px rgba(17,24,39,.08);
+      --glow: 0 20px 70px rgba(255,120,84,.18);
+      --orange: #f97316;
+      --rose: #f43f5e;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      background:
+        radial-gradient(circle at 16% 8%, rgba(255,122,89,.13), transparent 28rem),
+        radial-gradient(circle at 88% 16%, rgba(77,149,255,.11), transparent 28rem),
+        linear-gradient(180deg, #fafafa 0%, #f4f6f8 48%, #fff 100%);
+    }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .wrap { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      border-bottom: 1px solid rgba(255,255,255,.74);
+      background: rgba(255,255,255,.74);
+      backdrop-filter: blur(22px);
+    }
+    .nav-inner {
+      min-height: 70px;
+      display: grid;
+      grid-template-columns: auto minmax(220px, 520px) auto;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 0;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      text-align: left;
+      color: var(--ink);
+    }
+    .mark {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      background: var(--ink);
+      color: #fff;
+      font-size: 18px;
+      font-weight: 950;
+      box-shadow: var(--shadow);
+    }
+    .brand strong { display: block; line-height: 1.1; }
+    .brand small { display: block; color: var(--muted); font-size: 12px; }
+    .top-search { position: relative; }
+    .top-search input {
+      width: 100%;
+      height: 46px;
+      border: 1px solid var(--line);
+      outline: 0;
+      border-radius: 999px;
+      padding: 0 44px 0 42px;
+      background: rgba(255,255,255,.88);
+      color: var(--ink);
+      font-weight: 650;
+      box-shadow: 0 8px 26px rgba(17,24,39,.04);
+    }
+    .top-search span { position: absolute; left: 17px; top: 12px; color: #98a2b3; }
+    .clear {
+      display: none;
+      position: absolute;
+      right: 7px;
+      top: 7px;
+      width: 32px;
+      height: 32px;
+      border: 0;
+      border-radius: 999px;
+      background: #f2f4f7;
+      color: #667085;
+    }
+    .actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+    .pill, .lang button {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,.78);
+      color: #475467;
+      font-size: 13px;
+      font-weight: 800;
+      transition: .2s ease;
+    }
+    .pill { padding: 10px 14px; }
+    .pill:hover, .lang button:hover { transform: translateY(-1px); background: #fff; }
+    .lang {
+      display: flex;
+      gap: 4px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 4px;
+      background: rgba(255,255,255,.76);
+    }
+    .lang button { border: 0; background: transparent; padding: 7px 10px; }
+    .lang button.active { background: var(--ink); color: #fff; }
+    .hero { padding: 54px 0 26px; }
+    .hero-inner { max-width: 860px; margin: 0 auto; text-align: center; }
+    .eyebrow {
+      display: inline-flex;
+      margin-bottom: 22px;
+      border: 1px solid #fff;
+      border-radius: 999px;
+      padding: 9px 14px;
+      background: rgba(255,255,255,.74);
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 850;
+      box-shadow: 0 4px 14px rgba(17,24,39,.04);
+    }
+    h1 { margin: 0; font-size: clamp(38px, 7vw, 76px); line-height: 1.03; letter-spacing: 0; }
+    .lead { max-width: 680px; margin: 22px auto 0; color: var(--muted); font-size: 18px; line-height: 1.8; }
+    .toolbar { padding: 28px 0 14px; }
+    .breadcrumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; color: #667085; font-size: 14px; font-weight: 750; }
+    .breadcrumbs button { border: 0; background: transparent; color: #475467; font-weight: 850; padding: 4px; }
+    .breadcrumbs button:hover { color: var(--ink); }
+    .kicker { margin-top: 14px; color: var(--orange); font-size: 13px; font-weight: 950; letter-spacing: .18em; text-transform: uppercase; }
+    h2 { margin: 6px 0 0; font-size: clamp(28px, 4vw, 44px); letter-spacing: 0; }
+    .hint { color: var(--muted); line-height: 1.65; margin: 8px 0 0; }
+    .directory-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; padding: 18px 0 76px; }
+    .directory-card {
+      min-height: 168px;
+      border: 1px solid #fff;
+      border-radius: 28px;
+      padding: 20px;
+      background: var(--panel);
+      box-shadow: 0 4px 16px rgba(17,24,39,.04);
+      text-align: left;
+      color: var(--ink);
+      transition: .22s ease;
+    }
+    .directory-card:hover { transform: translateY(-4px); background: #fff; box-shadow: var(--shadow); }
+    .directory-card .icon {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      background: var(--ink);
+      color: #fff;
+      margin-bottom: 16px;
+      font-weight: 950;
+    }
+    .directory-card strong { display: block; font-size: 18px; letter-spacing: 0; }
+    .directory-card p { margin: 8px 0 0; color: var(--muted); font-size: 14px; line-height: 1.65; }
+    .directory-card small { display: block; margin-top: 16px; color: #98a2b3; font-weight: 850; }
+    .tiers { padding-bottom: 84px; }
+    .tier { margin-top: 34px; }
+    .tier-top { display: flex; align-items: end; justify-content: space-between; margin-bottom: 12px; }
+    .tier h3 { margin: 0; font-size: 28px; }
+    .tier-count { color: var(--muted); font-size: 14px; font-weight: 800; }
+    .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 22px;
+      background: rgba(255,255,255,.82);
+      box-shadow: var(--shadow);
+      transition: .24s ease;
+    }
+    .card:hover { transform: translateY(-5px); }
+    .rail { position: absolute; inset: 0 0 auto; height: 4px; }
+    .badge { display: inline-flex; border-radius: 999px; padding: 6px 12px; color: #fff; font-size: 14px; font-weight: 950; }
+    .hang { background: linear-gradient(135deg, rgba(255,255,255,.98), rgba(255,237,213,.76), rgba(255,228,230,.6)); border-color: rgba(254,215,170,.9); box-shadow: var(--glow); }
+    .hang .rail, .hang .badge { background: linear-gradient(90deg, var(--orange), var(--rose)); }
+    .top { background: linear-gradient(135deg, #fff, rgba(219,234,254,.7)); border-color: rgba(191,219,254,.9); }
+    .top .rail, .top .badge { background: linear-gradient(90deg, #2563eb, #06b6d4); }
+    .elite { background: linear-gradient(135deg, #fff, rgba(209,250,229,.7)); border-color: rgba(167,243,208,.9); }
+    .elite .rail, .elite .badge { background: linear-gradient(90deg, #059669, #14b8a6); }
+    .npc .rail, .npc .badge { background: linear-gradient(90deg, #64748b, #475569); }
+    .trash { background: rgba(244,244,245,.82); opacity: .9; }
+    .trash .rail, .trash .badge { background: linear-gradient(90deg, #52525b, #18181b); }
+    .card-head { display: flex; align-items: start; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+    .heart {
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,.8);
+      color: #98a2b3;
+      font-size: 18px;
+    }
+    .heart.active { color: #f43f5e; background: #fff1f2; border-color: #fecdd3; }
+    .meta { margin-top: 14px; color: var(--muted); font-size: 13px; font-weight: 800; }
+    .name { margin-top: 4px; font-size: 21px; font-weight: 950; letter-spacing: 0; }
+    .summary { min-height: 52px; color: var(--muted); line-height: 1.65; font-size: 14px; }
+    .score-row { display: grid; grid-template-columns: 84px 1fr; gap: 16px; align-items: center; margin: 18px 0; }
+    .score { width: 76px; height: 76px; display: grid; place-items: center; border-radius: 27px; background: rgba(255,255,255,.75); font-size: 30px; font-weight: 950; }
+    .meter { margin: 10px 0; }
+    .meter-label { display: flex; justify-content: space-between; margin-bottom: 5px; color: var(--muted); font-size: 12px; font-weight: 850; }
+    .bar { height: 6px; overflow: hidden; border-radius: 999px; background: rgba(148,163,184,.25); }
+    .fill { height: 100%; border-radius: inherit; background: var(--ink); }
+    .audience-label { color: #98a2b3; text-transform: uppercase; letter-spacing: .16em; font-size: 11px; font-weight: 950; }
+    .audience { margin-top: 4px; color: #344054; font-size: 14px; font-weight: 700; line-height: 1.55; }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .tag { border: 1px solid #fff; border-radius: 999px; background: rgba(255,255,255,.66); padding: 6px 10px; color: #475467; font-size: 12px; font-weight: 850; }
+    .quick-notes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .quick-note {
+      border: 1px solid rgba(255,255,255,.72);
+      border-radius: 18px;
+      background: rgba(255,255,255,.54);
+      padding: 10px;
+      color: #475467;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    .quick-note strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--ink);
+      font-size: 12px;
+    }
+    .detail-link { margin-top: 18px; display: flex; justify-content: space-between; font-size: 14px; font-weight: 950; }
+    .empty { display: none; margin: 22px 0 80px; border: 1px solid var(--line); border-radius: 28px; background: rgba(255,255,255,.78); padding: 44px; text-align: center; color: var(--muted); box-shadow: var(--shadow); }
+    .modal { display: none; position: fixed; inset: 0; z-index: 50; align-items: center; justify-content: center; padding: 18px; background: rgba(17,24,39,.28); backdrop-filter: blur(12px); }
+    .modal.show { display: flex; }
+    .dialog { width: min(920px, 100%); max-height: min(760px, calc(100vh - 36px)); overflow: auto; border: 1px solid #fff; border-radius: 34px; background: rgba(255,255,255,.94); box-shadow: 0 30px 90px rgba(17,24,39,.24); padding: 26px; }
+    .dialog-top { display: flex; justify-content: space-between; gap: 16px; align-items: start; }
+    .close { width: 40px; height: 40px; border: 1px solid var(--line); border-radius: 999px; background: #fff; }
+    .dialog h2 { margin: 12px 0 0; font-size: 36px; }
+    .dialog-summary { color: var(--muted); line-height: 1.75; }
+    .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 22px; }
+    .info { border: 1px solid var(--line); border-radius: 22px; background: #fff; padding: 16px; color: var(--muted); line-height: 1.65; font-size: 14px; }
+    .info strong { display: block; margin-bottom: 8px; color: var(--ink); font-size: 17px; }
+    .info ul { margin: 0; padding-left: 18px; }
+    @media (max-width: 940px) {
+      .nav-inner { grid-template-columns: 1fr; }
+      .actions { justify-content: flex-start; overflow-x: auto; }
+      .directory-grid, .product-grid { grid-template-columns: repeat(2, 1fr); }
+      .info-grid { grid-template-columns: 1fr; }
+      .hero-inner { text-align: left; }
+      .lead { margin-left: 0; }
+    }
+    @media (max-width: 640px) {
+      .pill { display: none; }
+      .directory-grid, .product-grid { grid-template-columns: 1fr; }
+      .hero { padding-top: 38px; }
+      .directory-card { min-height: auto; }
+      .dialog { border-radius: 26px; padding: 18px; }
+      .dialog h2 { font-size: 28px; }
+    }
+  </style>
+  <script src="assets/category-tree-data.js"></script>
+  <script src="assets/pc-components-rankings.js"></script>
+</head>
+<body>
+  <header class="nav">
+    <nav class="wrap nav-inner" aria-label="Main navigation">
+      <button class="brand" id="homeButton" type="button" aria-label="夯榜 HangRank">
+        <span class="mark">夯</span>
+        <span><strong>夯榜</strong><small>HangRank</small></span>
+      </button>
+      <label class="top-search">
+        <span>⌕</span>
+        <input id="searchInput" type="search" autocomplete="off">
+        <button id="clearButton" class="clear" type="button">×</button>
+      </label>
+      <div class="actions">
+        <button class="pill" id="directoryButton" type="button" data-i18n="directory">目录</button>
+        <button class="pill" id="favoritesButton" type="button" data-i18n="favorites">收藏</button>
+        <div class="lang" aria-label="Language">
+          <button type="button" data-lang="zh" class="active">中文</button>
+          <button type="button" data-lang="en">English</button>
+          <button type="button" data-lang="ja">日本語</button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="wrap hero" id="hero">
+      <div class="hero-inner">
+        <span class="eyebrow">Internet consensus ranking</span>
+        <h1 data-i18n="heroTitle">把全网推荐压成一张干净榜单</h1>
+        <p class="lead" data-i18n="heroSubtitle">从大品类一路下钻到具体榜单，少刷十个视频，少看二十篇种草。</p>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <div class="toolbar">
+        <div class="breadcrumbs" id="breadcrumbs"></div>
+        <div class="kicker" id="viewKicker">HangRank</div>
+        <h2 id="viewTitle">排行榜目录</h2>
+        <p class="hint" id="viewHint"></p>
+      </div>
+      <div class="directory-grid" id="directoryGrid"></div>
+      <div class="tiers" id="tierContainer"></div>
+      <div class="empty" id="emptyState"></div>
+    </section>
+  </main>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true">
+    <div class="dialog">
+      <div class="dialog-top">
+        <div>
+          <span class="badge" id="modalTier">夯</span>
+          <h2 id="modalTitle">Product</h2>
+          <p class="dialog-summary" id="modalSummary"></p>
+        </div>
+        <button class="close" id="modalClose" type="button">×</button>
+      </div>
+      <div class="info-grid">
+        <article class="info"><strong data-i18n="productInfo">产品信息</strong><p id="modalInfo"></p></article>
+        <article class="info"><strong data-i18n="whyTier">为什么在这一档</strong><p id="modalWhy"></p></article>
+        <article class="info"><strong data-i18n="bestFor">适合谁</strong><p id="modalAudience"></p></article>
+        <article class="info"><strong data-i18n="pros">优点</strong><ul id="modalPros"></ul></article>
+        <article class="info"><strong data-i18n="cons">缺点</strong><ul id="modalCons"></ul></article>
+        <article class="info"><strong data-i18n="verdict">一句话结论</strong><p id="modalVerdict"></p></article>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const copy = {
+      zh: {
+        directory: "目录",
+        favorites: "收藏",
+        heroTitle: "把全网推荐压成一张干净榜单",
+        heroSubtitle: "从大品类一路下钻到具体榜单，少刷十个视频，少看二十篇种草。",
+        searchPlaceholder: "搜索品类或产品，比如：降噪耳机、防晒、猫砂",
+        home: "首页",
+        allCategories: "排行榜目录",
+        chooseMajor: "先选一个大品类，再逐级进入具体榜单。",
+        subcategories: "二级分类",
+        leafCategories: "三级细分类",
+        ranking: "具体排行榜",
+        searchResults: "搜索结果",
+        favoriteResults: "我的收藏",
+        value: "性价比",
+        quality: "质量",
+        audience: "适合",
+        detail: "详情",
+        empty: "没有找到结果，换个关键词试试。",
+        favoriteEmpty: "还没有收藏。看到顺眼的榜单卡片，点一下心形就行。",
+        productInfo: "产品信息",
+        whyTier: "为什么在这一档",
+        bestFor: "适合谁",
+        pros: "优点",
+        cons: "缺点",
+        verdict: "一句话结论",
+        items: "个条目"
+      },
+      en: {
+        directory: "Directory",
+        favorites: "Favorites",
+        heroTitle: "Turn messy internet advice into one clean ranking",
+        heroSubtitle: "Drill from a major category to a specific ranking, without chasing endless recommendation posts.",
+        searchPlaceholder: "Search category or product, e.g. ANC headphones, sunscreen",
+        home: "Home",
+        allCategories: "Ranking Directory",
+        chooseMajor: "Pick a major category, then drill down to a specific list.",
+        subcategories: "Subcategories",
+        leafCategories: "Specific Lists",
+        ranking: "Ranking",
+        searchResults: "Search Results",
+        favoriteResults: "My Favorites",
+        value: "Value",
+        quality: "Quality",
+        audience: "Best for",
+        detail: "Details",
+        empty: "No results. Try another keyword.",
+        favoriteEmpty: "No favorites yet. Tap the heart on a ranking card.",
+        productInfo: "Product info",
+        whyTier: "Why this tier",
+        bestFor: "Best for",
+        pros: "Pros",
+        cons: "Cons",
+        verdict: "Quick verdict",
+        items: "items"
+      },
+      ja: {
+        directory: "目录",
+        favorites: "お気に入り",
+        heroTitle: "散らかった口コミを、きれいなランキングへ",
+        heroSubtitle: "大カテゴリから具体的なランキングまで、迷わず段階的に探せます。",
+        searchPlaceholder: "カテゴリや商品を検索。例：ANCヘッドホン、日焼け止め",
+        home: "ホーム",
+        allCategories: "ランキング目录",
+        chooseMajor: "大カテゴリを選び、具体的なリストまで進みます。",
+        subcategories: "サブカテゴリ",
+        leafCategories: "詳細カテゴリ",
+        ranking: "ランキング",
+        searchResults: "検索結果",
+        favoriteResults: "お気に入り",
+        value: "コスパ",
+        quality: "品質",
+        audience: "向いている人",
+        detail: "詳細",
+        empty: "結果がありません。別のキーワードを試してください。",
+        favoriteEmpty: "お気に入りはまだありません。カードのハートを押してください。",
+        productInfo: "商品情報",
+        whyTier: "このランクの理由",
+        bestFor: "おすすめの人",
+        pros: "良い点",
+        cons: "注意点",
+        verdict: "ひとこと結論",
+        items: "件"
+      }
+    };
+
+    const tierOrder = ["hang", "top", "elite", "npc", "trash"];
+    const tiers = {
+      hang: { zh: "夯", en: "Hang", ja: "最強" },
+      top: { zh: "顶级", en: "Top", ja: "トップ" },
+      elite: { zh: "人上人", en: "Elite", ja: "上位勢" },
+      npc: { zh: "npc", en: "NPC", ja: "NPC" },
+      trash: { zh: "拉完了", en: "Cooked", ja: "厳しい" }
+    };
+
+    const products = [
+      product("sony-xm5", "digital", "audio", "noise-cancel-headphones", "Sony", "WH-1000XM5", "索尼降噪耳机", "Sony Noise Cancelling Headphones", "ソニー ノイズキャンセリングヘッドホン", "hang", 96, 88, 97, "降噪、佩戴、声音和稳定性都很均衡，是不想折腾用户的闭眼买。", "通勤、办公室、长途飞行党", "综合体验长期稳定，替代品很难在所有维度一起赢它。", "预算够就上，省掉大部分选择成本。", ["闭眼买", "通勤神器"], ["降噪强", "佩戴轻"], ["不可折叠", "价格偏高"]),
+      product("anker-737", "digital", "pc-components", "power-supply", "Anker", "737", "Anker 737 充电宝", "Anker 737 Power Bank", "Anker 737 モバイルバッテリー", "top", 90, 84, 93, "功率、容量和屏显都很扎实，适合真正需要大功率移动供电的人。", "重度手机、平板、轻薄本用户", "不是最轻，但稳定性和信息透明度很强。", "不是人人需要，但需要的人会很爱。", ["适合新手", "商务出差"], ["输出强", "屏显清楚"], ["偏重"]),
+      product("cerave-cleanser", "beauty", "skincare", "cleanser", "CeraVe", "Hydrating Cleanser", "适乐肤保湿洁面", "CeraVe Hydrating Cleanser", "CeraVe 保湿クレンザー", "hang", 94, 95, 90, "温和、便宜、大容量，基础洁面里很难翻车。", "干皮、敏感肌、屏障不稳用户", "靠稳定和低刺激长期留在高位。", "护肤预算先投这里，不丢人。", ["性价比高", "屏障友好"], ["温和不拔干", "性价比高"], ["清洁力不适合浓妆"]),
+      product("calbee-granola", "food", "snacks", "protein-snack", "Calbee", "Fruit Granola", "卡乐比水果麦片", "Calbee Fruit Granola", "カルビー フルグラ", "elite", 82, 79, 83, "好吃、方便、稳定，但糖分和热量别装看不见。", "早餐懒人、酸奶搭配党", "适合作为方便食品而不是减脂神物。", "囤可以，别把它当健身餐。", ["懒人早餐"], ["口味稳定", "搭配方便"], ["糖分不低"]),
+      product("pidan-litter", "pet", "cat-products", "cat-litter", "Pidan", "Tofu Cat Litter", "彼诞豆腐猫砂", "Pidan Tofu Cat Litter", "Pidan 豆腐猫砂", "top", 88, 86, 87, "结团、除臭和清理体验都在线，是猫砂里的稳妥选择。", "城市养猫家庭、对粉尘敏感的人", "没有神化必要，但确实比很多低价猫砂省心。", "猫接受的话，可以长期回购。", ["适合新手"], ["粉尘较低", "结团快"], ["不同猫接受度不同"]),
+      product("roborock-q", "home-appliance", "large-appliance", "robot-vacuum", "Roborock", "Q Revo", "石头扫拖机器人", "Roborock Robot Vacuum", "Roborock ロボット掃除機", "hang", 93, 91, 92, "自动化程度高，宠物毛发和日常灰尘处理很省心。", "有宠家庭、毛发焦虑、懒人清洁党", "把清洁频率从意志力问题变成机器日程，价值感很直接。", "有宠物且预算够，幸福感提升明显。", ["闭眼买", "养宠救星"], ["自动洗拖布", "毛发处理强"], ["需要预留基站空间"]),
+      product("hoka-bondi", "sports", "sports-shoes", "running-shoes", "Hoka", "Bondi 8", "Hoka Bondi 8 跑鞋", "Hoka Bondi 8 Running Shoes", "Hoka Bondi 8 ランニングシューズ", "top", 89, 76, 92, "缓震厚实，脚感友好，但不是速度训练鞋。", "大体重、慢跑、久站通勤用户", "定位清晰且兑现度高，买之前只需要确认你要的是缓震。", "想要软弹保护感，可以冲。", ["大体重友好"], ["缓震强", "久站舒服"], ["不够灵活", "价格高"]),
+      product("baby-bottle", "baby", "baby-feeding", "baby-bottle", "Hegen", "PPSU", "Hegen PPSU 奶瓶", "Hegen PPSU Bottle", "Hegen PPSU 哺乳瓶", "top", 87, 75, 91, "设计和清洗体验优秀，价格偏贵但省心。", "新手爸妈、混合喂养家庭", "贵，但减少漏奶、清洗和携带的麻烦。", "预算够可以入，刚需家庭感知明显。", ["新手友好"], ["清洗方便", "密封好"], ["价格高"]),
+      product("air-fryer", "home-appliance", "kitchen-appliance", "air-fryer", "Philips", "HD9252", "飞利浦空气炸锅", "Philips Air Fryer", "Philips エアフライヤー", "elite", 83, 78, 86, "稳定、易用、不花哨，适合厨房新手。", "租房党、少油烹饪用户", "不是最低价，但稳定性和清洁体验更可靠。", "想少踩坑，买主流型号更稳。", ["适合新手"], ["操作简单", "稳定"], ["占台面"]),
+      product("pillow", "home", "furniture", "mattress", "Tempur", "Original", "泰普尔记忆枕", "Tempur Memory Pillow", "Tempur 低反発枕", "top", 88, 70, 94, "支撑感强，适合明确喜欢慢回弹的人。", "颈部支撑需求高的人", "材料和支撑都在线，但不是所有人都适应。", "先确认睡感，再决定是否冲高价。", ["支撑强"], ["承托稳定"], ["试错成本高"]),
+      product("gpu-5060ti-001", "digital", "pc-components", "gpu", "Colorful", "RTX 5060 Ti Battle AX DUO 8GB-V", "七彩虹 RTX 5060 Ti 战斧 DUO", "Colorful RTX 5060 Ti Battle AX DUO", "Colorful RTX 5060 Ti Battle AX DUO", "hang", 96, 99, 86, "这一代真正的甜品守门员，价格压得狠。", "预算敏感装机党、1080P/2K 主流玩家", "装机圈最像标准答案的一张，便宜、够用、不作妖。", "想少花钱上 5060 Ti，优先看它。", ["甜品卡", "性价比", "装机热门"], ["性价比极高", "小机箱友好", "散热够用"], ["双风扇颜值一般", "RGB较弱"], 1, "positive", "recommend"),
+      product("gpu-5060ti-002", "digital", "pc-components", "gpu", "GALAX", "RTX 5060 Ti 魔刃 MAX OC", "影驰 RTX 5060 Ti 魔刃", "GALAX RTX 5060 Ti Metal Master MAX OC", "GALAX RTX 5060 Ti 魔刃", "hang", 94, 92, 92, "散热和做工明显超这个价位。", "想要三风扇但不想上太贵的玩家", "B站装机区提到它，通常不是尬吹，确实挺稳。", "价格正常时很值得蹲。", ["三风扇", "热门", "B站推荐"], ["三风扇散热强", "静音表现好", "装机圈口碑高"], ["部分地区溢价", "灯效普通"], 2, "positive", "recommend"),
+      product("gpu-5060ti-003", "digital", "pc-components", "gpu", "MAXSUN", "RTX 5060 Ti iCraft OC16G", "铭瑄 RTX 5060 Ti iCraft", "MAXSUN RTX 5060 Ti iCraft", "MAXSUN RTX 5060 Ti iCraft", "hang", 91, 90, 85, "白卡党这一代真的可以闭眼冲。", "白色海景房、颜值装机用户", "便宜白卡不再只是看着好看，这代散热也跟上了。", "白卡党可以重点看。", ["白卡", "海景房", "小红书热门"], ["白色颜值高", "海景房适配度高", "散热进步明显"], ["保值率一般", "品牌争议还在"], 3, "positive", "recommend"),
+      product("gpu-5060ti-004", "digital", "pc-components", "gpu", "Colorful", "RTX 5060 Ti 战斧 豪华版 16GB", "七彩虹 RTX 5060 Ti 战斧豪华", "Colorful RTX 5060 Ti Battle AX Deluxe", "Colorful RTX 5060 Ti Battle AX Deluxe", "top", 90, 84, 92, "散热更强，但价格已经开始没那么香。", "想要更稳散热和一点颜值的人", "比基础版舒服，但甜品卡加钱太多就变味。", "能买，别加价买。", ["RGB", "高配战斧"], ["三风扇散热", "供电更稳", "颜值不错"], ["价格上涨明显"], 4, "positive", "recommend"),
+      product("gpu-5060ti-005", "digital", "pc-components", "gpu", "MSI", "RTX 5060 Ti GAMING TRIO OC", "微星 RTX 5060 Ti GAMING TRIO", "MSI RTX 5060 Ti GAMING TRIO", "MSI RTX 5060 Ti GAMING TRIO", "top", 89, 72, 95, "传统高端非公味儿很正，但价格也真高。", "认大厂、追求静音和做工的人", "做工没毛病，但价格会劝退一批甜品卡玩家。", "预算够再考虑。", ["高端非公", "静音", "传统大厂"], ["静音优秀", "做工扎实", "供电稳定"], ["溢价高", "性价比偏低"], 5, "mixed", "consider"),
+      product("gpu-5060ti-006", "digital", "pc-components", "gpu", "ASUS", "RTX 5060 Ti TUF Gaming OC", "华硕 RTX 5060 Ti TUF", "ASUS RTX 5060 Ti TUF Gaming", "ASUS RTX 5060 Ti TUF Gaming", "top", 88, 70, 94, "很稳，但华硕税还是太明显。", "认华硕、想买省心大厂的人", "TUF 稳是真的稳，但这个价位大家更在意香不香。", "能买，但别冲首发高价。", ["TUF", "稳定", "华硕税"], ["散热优秀", "做工稳定", "品牌认可度高"], ["价格偏贵", "没啥惊喜"], 6, "mixed", "consider"),
+      product("gpu-5060ti-007", "digital", "pc-components", "gpu", "Colorful", "iGame RTX 5060 Ti Ultra W OC 16GB-V", "七彩虹 RTX 5060 Ti Ultra W", "Colorful iGame RTX 5060 Ti Ultra W", "Colorful iGame RTX 5060 Ti Ultra W", "elite", 86, 68, 87, "二次元海景房浓度超标。", "白色主题、二次元、桌搭用户", "它卖的是氛围，不是纯跑分性价比。", "颜值刚需可以买。", ["二次元", "白卡", "潮流"], ["外观吸睛", "白色主题好搭", "RGB效果强"], ["溢价明显", "不走性价比路线"], 7, "mixed", "consider"),
+      product("gpu-5060ti-008", "digital", "pc-components", "gpu", "GALAX", "RTX 5060 Ti 星曜 OC", "影驰 RTX 5060 Ti 星曜", "GALAX RTX 5060 Ti HOF/Xingyao OC", "GALAX RTX 5060 Ti 星曜", "elite", 85, 69, 88, "白色 RGB 玩家最爱。", "海景房、RGB、白色主机用户", "星曜还是那个会拿捏白色氛围的星曜。", "想要白色灯效可以考虑。", ["RGB", "白色", "海景房"], ["灯效氛围感强", "海景房神器", "颜值高"], ["容易缺货", "价格偏高"], 8, "positive", "consider"),
+      product("gpu-5060ti-009", "digital", "pc-components", "gpu", "Yeston", "RTX 5060 Ti Sakura Atlantis", "盈通 RTX 5060 Ti 樱瞳", "Yeston RTX 5060 Ti Sakura Atlantis", "Yeston RTX 5060 Ti Sakura Atlantis", "elite", 84, 65, 85, "女生装机和二次元用户直接疯狂。", "二次元主题、粉白海景房用户", "樱瞳从来不是便宜答案，是情绪价值答案。", "喜欢就买，不喜欢别硬懂。", ["樱瞳", "二次元", "颜值党"], ["颜值极强", "白色海景房绝配"], ["溢价严重", "不算纯性价比"], 9, "mixed", "consider"),
+      product("gpu-5060ti-010", "digital", "pc-components", "gpu", "ZOTAC", "RTX 5060 Ti XGAMING OC", "索泰 RTX 5060 Ti XGAMING", "ZOTAC RTX 5060 Ti XGAMING", "ZOTAC RTX 5060 Ti XGAMING", "npc", 78, 76, 76, "没啥槽点，也没啥记忆点。", "看到好价、只想稳定用的人", "就是一张正常卡，买完不会兴奋，也不太会后悔。", "低价可入，原价一般。", ["稳定", "普通"], ["稳定", "温度正常"], ["讨论度低", "外观一般"], 10, "neutral", "consider"),
+      product("gpu-5060ti-011", "digital", "pc-components", "gpu", "GIGABYTE", "RTX 5060 Ti EAGLE OC", "技嘉 RTX 5060 Ti EAGLE", "GIGABYTE RTX 5060 Ti EAGLE", "GIGABYTE RTX 5060 Ti EAGLE", "npc", 74, 72, 70, "外观看着猛，但实际没太多亮点。", "认技嘉或刚好遇到活动价的人", "讨论区评价比较普通，优势不够尖。", "不是不能买，是没必要优先。", ["普通", "争议"], ["散热正常", "品牌认知度高"], ["噪音一般", "供电普通"], 11, "neutral", "consider"),
+      product("gpu-5060ti-012", "digital", "pc-components", "gpu", "PNY", "RTX 5060 Ti EPIC-X RGB OC", "PNY RTX 5060 Ti EPIC-X", "PNY RTX 5060 Ti EPIC-X", "PNY RTX 5060 Ti EPIC-X", "npc", 73, 75, 71, "海外味很浓，但国内存在感偏低。", "能接受小众品牌、看重低价的人", "东西不一定差，但国内讨论和售后认知确实弱。", "便宜可以看看，贵了没必要。", ["海外品牌", "低调"], ["偶尔价格便宜", "稳定性还行"], ["售后认知低", "讨论热度低"], 12, "neutral", "consider"),
+      product("gpu-5060ti-013", "digital", "pc-components", "gpu", "GIGABYTE", "RTX 5060 Ti WINDFORCE OC", "技嘉 RTX 5060 Ti WINDFORCE", "GIGABYTE RTX 5060 Ti WINDFORCE", "GIGABYTE RTX 5060 Ti WINDFORCE", "trash", 66, 67, 60, "价格没便宜多少，但体验提升有限。", "只在极低价时考虑的人", "装机讨论里争议不少，不是很让人放心。", "价格不够低就绕。", ["争议", "避雷"], ["偶尔有低价"], ["散热一般", "噪音偏明显", "互联网评价两极化"], 13, "negative", "avoid"),
+      product("gpu-5060ti-014", "digital", "pc-components", "gpu", "ONDA", "RTX 5060 Ti 神盾", "昂达 RTX 5060 Ti 神盾", "ONDA RTX 5060 Ti Shield", "ONDA RTX 5060 Ti Shield", "trash", 58, 65, 50, "便宜是真便宜，但很多人不太敢碰。", "预算极限且能承担风险的人", "便宜能解释一部分问题，但不能解释全部。", "新手不建议碰。", ["低价", "避雷"], ["价格低"], ["品牌信任度低", "做工一般", "二手保值差"], 14, "negative", "avoid")
+,
+      product("keyboard-001", "digital", "pc-peripherals", "mechanical-keyboard", "AULA", "F87 Pro", "狼蛛 F87 Pro", "AULA F87 Pro", "AULA F87 Pro", "hang", 96, 99, 84, "这一代真正的百元卷王。", "百元三模入门、宿舍党、第一把机械键盘", "小红书和键圈都在夸，核心就是便宜还真挺好用。", "预算有限就先看它。", ["卷王", "三模", "键圈热门"], ["性价比极高", "手感超预期", "三模齐全", "小红书热度爆炸"], ["品牌调性一般", "默认键帽普通"], 1, "positive", "recommend"),
+      product("keyboard-002", "digital", "pc-peripherals", "mechanical-keyboard", "MCHOSE", "G75 Pro", "迈从 G75 Pro", "MCHOSE G75 Pro", "MCHOSE G75 Pro", "hang", 94, 95, 88, "最近小红书键圈出镜率高得离谱。", "喜欢 75 配列、想要颜值和性价比的人", "这把属于刷到很多次还真不烦，因为确实能打。", "想入客制化味道可以看。", ["客制化", "小红书热门", "75配列"], ["颜值高", "轴体优秀", "性价比强"], ["配列需要适应"], 2, "positive", "recommend"),
+      product("keyboard-003", "digital", "pc-peripherals", "mechanical-keyboard", "IQUNIX", "EV63", "IQUNIX EV63", "IQUNIX EV63", "IQUNIX EV63", "top", 91, 72, 96, "高级感和做工确实不是普通键盘能碰的。", "铝坨坨玩家、桌搭质感党", "贵是真的贵，但拿到手也确实有点东西。", "预算够且喜欢小配列再冲。", ["铝坨坨", "高端", "设计感"], ["做工顶级", "铝坨坨质感强", "设计感优秀"], ["价格高", "小配列门槛高"], 3, "positive", "consider"),
+      product("keyboard-004", "digital", "pc-peripherals", "mechanical-keyboard", "WOBKEY", "Rainy75", "Rainy75", "WOBKEY Rainy75", "WOBKEY Rainy75", "top", 90, 83, 92, "雨75几乎成了客制化入坑标准答案。", "想体验 Gasket 和好声音的新玩家", "键圈提到入坑，雨75基本绕不开。", "能买到正常价就很香。", ["客制化", "雨75", "Gasket"], ["声音优秀", "Gasket体验好", "键圈认可度高"], ["价格不低", "容易缺货"], 4, "positive", "recommend"),
+      product("keyboard-005", "digital", "pc-peripherals", "mechanical-keyboard", "Razer", "BlackWidow V4 Pro", "雷蛇 黑寡妇 V4 Pro", "Razer BlackWidow V4 Pro", "Razer BlackWidow V4 Pro", "elite", 87, 66, 91, "电竞房氛围感直接拉满。", "RGB 电竞桌面、雷蛇信仰用户", "不是键圈性价比答案，但氛围确实很会。", "信仰和灯效刚需可以买。", ["RGB", "电竞", "信仰"], ["RGB氛围强", "品牌信仰", "电竞感强"], ["溢价高", "性价比一般"], 5, "mixed", "consider"),
+      product("keyboard-006", "digital", "pc-peripherals", "mechanical-keyboard", "Lofree", "Flow84", "洛斐 Flow84", "Lofree Flow84", "Lofree Flow84", "elite", 85, 70, 88, "女生办公桌浓度超标。", "办公桌搭、轻薄键盘、颜值党", "它不是给重度游戏党准备的，是给桌面审美准备的。", "办公和桌搭用户可以考虑。", ["女生桌搭", "颜值", "超薄"], ["颜值高", "超薄设计", "办公体验舒服"], ["游戏党不一定喜欢", "价格偏高"], 6, "positive", "consider"),
+      product("keyboard-007", "digital", "pc-peripherals", "mechanical-keyboard", "Dareu", "A98", "达尔优 A98", "Dareu A98", "Dareu A98", "npc", 78, 75, 80, "很稳，但现在已经不算特别卷了。", "喜欢 98 配列、想要稳妥的人", "以前很能打，现在新卷王太多，它就显得普通了。", "活动价能买，别高价追。", ["98配列", "老牌"], ["稳定", "配列舒服"], ["讨论热度下降", "卷不过新品牌"], 7, "neutral", "consider"),
+      product("keyboard-008", "digital", "pc-peripherals", "mechanical-keyboard", "Corsair", "K70 RGB Pro", "海盗船 K70 RGB Pro", "Corsair K70 RGB Pro", "Corsair K70 RGB Pro", "npc", 74, 68, 82, "传统电竞味很重，但已经不够新了。", "老派电竞外设用户、海盗船粉丝", "经典是经典，但现在键圈玩法变太快了。", "喜欢传统电竞味可以考虑。", ["传统电竞", "RGB"], ["品牌经典", "灯效强"], ["偏传统", "声音一般", "价格偏高"], 8, "neutral", "consider"),
+      product("keyboard-009", "digital", "pc-peripherals", "mechanical-keyboard", "Cherry", "G80-3000", "Cherry G80-3000", "Cherry G80-3000", "Cherry G80-3000", "trash", 61, 52, 76, "时代眼泪，现在年轻人真不太买账。", "收藏老键盘、怀旧玩家", "它是历史，不是现在的卷王答案。", "新手别拿它当第一把。", ["时代眼泪", "老派"], ["经典", "原厂轴"], ["声音空", "手感老派", "性价比低"], 9, "negative", "avoid"),
+      product("keyboard-010", "digital", "pc-peripherals", "mechanical-keyboard", "Logitech", "G913", "罗技 G913", "Logitech G913", "Logitech G913", "trash", 58, 48, 74, "以前很帅，现在大家都觉得有点电子垃圾感了。", "罗技生态用户、薄型键盘执念用户", "当年确实帅，现在看价格和体验就有点尴尬。", "除非特别便宜，不建议冲。", ["电子垃圾", "争议"], ["无线稳定", "品牌强"], ["价格虚高", "键圈口碑下降", "性价比低"], 10, "negative", "avoid")
+    ];
+
+    products.push(...(window.pcComponentRankingProducts || []));
+
+    const categoryTree = window.categoryTreeData || [];
+    let state = {
+      view: "home",
+      majorId: null,
+      subId: null,
+      leafId: null,
+      query: "",
+      lang: localStorage.getItem("hangrank-language") || "zh"
+    };
+    let favorites = JSON.parse(localStorage.getItem("hangrank-favorites-static") || "[]");
+
+    const $ = (id) => document.getElementById(id);
+    const tr = (key) => copy[state.lang][key];
+    const label = (item) => item?.labels?.[state.lang] || item?.labels?.zh || "";
+    const description = (item) => item?.description?.[state.lang] || item?.description?.zh || "";
+
+    function product(id, category, subcategory, leafCategory, brand, model, zh, en, ja, tier, score, valueScore, qualityScore, summary, audience, why, verdict, tags, pros, cons, rank, sentiment, recommendationLevel) {
+      return {
+        id,
+        category,
+        subcategory,
+        leafCategory,
+        brand,
+        model,
+        tier,
+        score,
+        valueScore,
+        qualityScore,
+        name: { zh, en, ja },
+        summary: { zh: summary, en: summary, ja: summary },
+        audience: { zh: audience, en: audience, ja: audience },
+        why: { zh: why, en: why, ja: why },
+        verdict: { zh: verdict, en: verdict, ja: verdict },
+        tags,
+        pros,
+        cons,
+        rank,
+        sentiment,
+        recommendationLevel
+      };
+    }
+    function findMajor(id) { return categoryTree.find(item => item.id === id); }
+    function findSub(majorId, subId) { return findMajor(majorId)?.children.find(item => item.id === subId); }
+    function findLeaf(majorId, subId, leafId) { return findSub(majorId, subId)?.children.find(item => item.id === leafId); }
+    function setView(next) {
+      state = { ...state, ...next };
+      render();
+    }
+    function renderI18n() {
+      document.documentElement.lang = state.lang === "zh" ? "zh-CN" : state.lang;
+      document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = tr(el.dataset.i18n); });
+      $("searchInput").placeholder = tr("searchPlaceholder");
+      document.querySelectorAll("[data-lang]").forEach(btn => btn.classList.toggle("active", btn.dataset.lang === state.lang));
+      localStorage.setItem("hangrank-language", state.lang);
+    }
+    function renderBreadcrumbs() {
+      const major = findMajor(state.majorId);
+      const sub = findSub(state.majorId, state.subId);
+      const leaf = findLeaf(state.majorId, state.subId, state.leafId);
+      const parts = [`<button type="button" data-crumb="home">${tr("home")}</button>`];
+      if (major) parts.push("›", `<button type="button" data-crumb="major">${label(major)}</button>`);
+      if (sub) parts.push("›", `<button type="button" data-crumb="sub">${label(sub)}</button>`);
+      if (leaf) parts.push("›", `<span>${label(leaf)}</span>`);
+      $("breadcrumbs").innerHTML = parts.join("");
+      document.querySelectorAll("[data-crumb]").forEach(btn => {
+        btn.onclick = () => {
+          if (btn.dataset.crumb === "home") setView({ view: "home", majorId: null, subId: null, leafId: null, query: "" });
+          if (btn.dataset.crumb === "major") setView({ view: "level2", subId: null, leafId: null });
+          if (btn.dataset.crumb === "sub") setView({ view: "level3", leafId: null });
+        };
+      });
+    }
+    function currentTitle() {
+      if (state.view === "favorites") return tr("favoriteResults");
+      if (state.query && state.view !== "ranking") return tr("searchResults");
+      if (state.view === "level2") return label(findMajor(state.majorId));
+      if (state.view === "level3") return label(findSub(state.majorId, state.subId));
+      if (state.view === "ranking") return label(findLeaf(state.majorId, state.subId, state.leafId));
+      return tr("allCategories");
+    }
+    function currentHint() {
+      if (state.view === "level2") return tr("subcategories");
+      if (state.view === "level3") return tr("leafCategories");
+      if (state.view === "ranking") return tr("ranking");
+      if (state.view === "favorites") return tr("favoriteResults");
+      return tr("chooseMajor");
+    }
+    function searchMatchesNode(item) {
+      const q = state.query.trim().toLowerCase();
+      if (!q) return true;
+      return [item.labels.zh, item.labels.en, item.labels.ja, item.description?.zh, item.slug].join(" ").toLowerCase().includes(q);
+    }
+    function getTargetForNode(item) {
+      if (item.level === 1) return { view: "level2", majorId: item.id, subId: null, leafId: null };
+      if (item.level === 2) return { view: "level3", majorId: item.parentId, subId: item.id, leafId: null };
+      const sub = findSubById(item.parentId);
+      return { view: "ranking", majorId: sub?.parentId || null, subId: item.parentId, leafId: item.id };
+    }
+    function findSubById(subId) {
+      for (const major of categoryTree) {
+        const sub = major.children.find(item => item.id === subId);
+        if (sub) return sub;
+      }
+      return null;
+    }
+    function countProductsForTarget(target) {
+      if (target.view === "level2") {
+        const actual = products.filter(product => product.category === target.majorId).length;
+        const major = findMajor(target.majorId);
+        const recommended = major?.children.reduce((sum, sub) => sum + sub.children.reduce((leafSum, leaf) => leafSum + (leaf.recommendedItems || 0), 0), 0) || 0;
+        return actual || recommended;
+      }
+      if (target.view === "level3") {
+        const actual = products.filter(product => product.subcategory === target.subId).length;
+        const sub = findSub(target.majorId, target.subId);
+        const recommended = sub?.children.reduce((sum, leaf) => sum + (leaf.recommendedItems || 0), 0) || 0;
+        return actual || recommended;
+      }
+      if (target.view === "ranking") {
+        const actual = products.filter(product => product.leafCategory === target.leafId).length;
+        const leaf = findLeaf(target.majorId, target.subId, target.leafId);
+        return actual || leaf?.recommendedItems || 0;
+      }
+      return products.length;
+    }
+    function renderDirectory() {
+      let nodes = categoryTree;
+      if (state.query && state.view !== "ranking" && state.view !== "favorites") {
+        const flat = [];
+        categoryTree.forEach(major => {
+          if (searchMatchesNode(major)) flat.push(major);
+          major.children.forEach(sub => {
+            if (searchMatchesNode(sub)) flat.push(sub);
+            sub.children.forEach(leaf => {
+              if (searchMatchesNode(leaf)) flat.push(leaf);
+            });
+          });
+        });
+        nodes = flat;
+      } else if (state.view === "level2") {
+        nodes = findMajor(state.majorId)?.children || [];
+      } else if (state.view === "level3") {
+        nodes = findSub(state.majorId, state.subId)?.children || [];
+      } else if (state.view === "ranking" || state.view === "favorites") {
+        nodes = [];
+      }
+      $("directoryGrid").style.display = nodes.length ? "grid" : "none";
+      $("directoryGrid").innerHTML = nodes.map(item => {
+        const target = getTargetForNode(item);
+        return `
+          <button class="directory-card" type="button" data-target='${JSON.stringify(target)}'>
+            <span class="icon">${label(item).slice(0, 1)}</span>
+            <strong>${label(item)}</strong>
+            <p>${description(item)}</p>
+            <small>${countProductsForTarget(target)} ${tr("items")}</small>
+          </button>
+        `;
+      }).join("");
+      document.querySelectorAll("[data-target]").forEach(card => {
+        card.onclick = () => setView(JSON.parse(card.dataset.target));
+      });
+    }
+    function searchableTextForProduct(product) {
+      const major = findMajor(product.category);
+      const sub = findSub(product.category, product.subcategory);
+      const leaf = findLeaf(product.category, product.subcategory, product.leafCategory);
+      return [product.brand, product.model, product.name.zh, product.name.en, product.name.ja, product.summary.zh, label(major), label(sub), label(leaf)].join(" ").toLowerCase();
+    }
+    function matchingProducts() {
+      let list = products.slice();
+      if (state.view === "ranking" && state.leafId) list = list.filter(product => product.leafCategory === state.leafId);
+      if (state.view === "favorites") list = list.filter(product => favorites.includes(product.id));
+      if (state.query.trim()) {
+        const q = state.query.trim().toLowerCase();
+        list = list.filter(product => searchableTextForProduct(product).includes(q));
+      }
+      return list;
+    }
+    function renderProducts() {
+      const showProducts = state.view === "ranking" || state.view === "favorites" || (state.query && matchingProducts().length);
+      const list = showProducts ? matchingProducts().sort((a, b) => (a.rank || 999) - (b.rank || 999)) : [];
+      $("tierContainer").style.display = list.length ? "block" : "none";
+      $("tierContainer").innerHTML = tierOrder.map(tier => {
+        const tierProducts = list.filter(product => product.tier === tier);
+        if (!tierProducts.length) return "";
+        return `
+          <section class="tier">
+            <div class="tier-top"><h3>${tiers[tier][state.lang]}</h3><span class="tier-count">${tierProducts.length} ${tr("items")}</span></div>
+            <div class="product-grid">${tierProducts.map(renderProductCard).join("")}</div>
+          </section>
+        `;
+      }).join("");
+      const hasDirectory = $("directoryGrid").style.display !== "none";
+      const empty = (state.view === "ranking" || state.view === "favorites" || state.query) && !list.length && !hasDirectory;
+      $("emptyState").style.display = empty ? "block" : "none";
+      $("emptyState").textContent = state.view === "favorites" ? tr("favoriteEmpty") : tr("empty");
+      document.querySelectorAll("[data-product]").forEach(card => card.onclick = () => openProduct(card.dataset.product));
+      document.querySelectorAll("[data-fav]").forEach(btn => {
+        btn.onclick = event => {
+          event.stopPropagation();
+          toggleFavorite(btn.dataset.fav);
+        };
+      });
+    }
+    function renderProductCard(product) {
+      return `
+        <article class="card ${product.tier}" data-product="${product.id}">
+          <div class="rail"></div>
+          <div class="card-head">
+            <div>
+              <span class="badge">${tiers[product.tier][state.lang]}</span>
+              <div class="meta">${product.brand} / ${product.model}</div>
+              <div class="name">${product.name[state.lang]}</div>
+            </div>
+            <button class="heart ${favorites.includes(product.id) ? "active" : ""}" type="button" data-fav="${product.id}">♥</button>
+          </div>
+          <p class="summary">${product.summary[state.lang]}</p>
+          <div class="score-row">
+            <div class="score">${product.score}</div>
+            <div>${meter(tr("value"), product.valueScore)}${meter(tr("quality"), product.qualityScore)}</div>
+          </div>
+          <div class="quick-notes">
+            <div class="quick-note"><strong>${tr("pros")}</strong>${product.pros.slice(0, 2).join(" / ")}</div>
+            <div class="quick-note"><strong>${tr("cons")}</strong>${product.cons.slice(0, 2).join(" / ")}</div>
+          </div>
+          <div class="audience-label">${tr("audience")}</div>
+          <div class="audience">${product.audience[state.lang]}</div>
+          <div class="tags">${product.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}</div>
+          <div class="detail-link"><span>${tr("detail")}</span><span>↗</span></div>
+        </article>
+      `;
+    }
+    function meter(name, value) {
+      return `<div class="meter"><div class="meter-label"><span>${name}</span><span>${value}</span></div><div class="bar"><div class="fill" style="width:${value}%"></div></div></div>`;
+    }
+    function toggleFavorite(id) {
+      favorites = favorites.includes(id) ? favorites.filter(item => item !== id) : favorites.concat(id);
+      localStorage.setItem("hangrank-favorites-static", JSON.stringify(favorites));
+      render();
+    }
+    function openProduct(id) {
+      const product = products.find(item => item.id === id);
+      if (!product) return;
+      const leaf = findLeaf(product.category, product.subcategory, product.leafCategory);
+      $("modal").classList.add("show");
+      $("modalTier").className = `badge ${product.tier}`;
+      $("modalTier").textContent = tiers[product.tier][state.lang];
+      $("modalTitle").textContent = product.name[state.lang];
+      $("modalSummary").textContent = product.summary[state.lang];
+      $("modalInfo").textContent = `${product.brand} / ${product.model} / ${label(leaf)} / ${product.score}`;
+      $("modalWhy").textContent = product.why[state.lang];
+      $("modalAudience").textContent = product.audience[state.lang];
+      $("modalPros").innerHTML = product.pros.map(item => `<li>${item}</li>`).join("");
+      $("modalCons").innerHTML = product.cons.map(item => `<li>${item}</li>`).join("");
+      $("modalVerdict").textContent = product.verdict[state.lang];
+    }
+    function render() {
+      renderI18n();
+      renderBreadcrumbs();
+      $("viewTitle").textContent = currentTitle();
+      $("viewHint").textContent = currentHint();
+      $("hero").style.display = state.view === "home" && !state.query ? "block" : "none";
+      $("searchInput").value = state.query;
+      $("clearButton").style.display = state.query ? "block" : "none";
+      renderDirectory();
+      renderProducts();
+    }
+    $("homeButton").onclick = () => setView({ view: "home", majorId: null, subId: null, leafId: null, query: "" });
+    $("directoryButton").onclick = () => setView({ view: "home", majorId: null, subId: null, leafId: null, query: "" });
+    $("favoritesButton").onclick = () => setView({ view: "favorites", majorId: null, subId: null, leafId: null, query: "" });
+    $("searchInput").oninput = event => setView({ query: event.target.value });
+    $("clearButton").onclick = () => setView({ query: "" });
+    $("modalClose").onclick = () => $("modal").classList.remove("show");
+    $("modal").onclick = event => { if (event.target.id === "modal") $("modal").classList.remove("show"); };
+    document.querySelectorAll("[data-lang]").forEach(btn => btn.onclick = () => setView({ lang: btn.dataset.lang }));
+
+    render();
+  </script>
+</body>
+</html>
